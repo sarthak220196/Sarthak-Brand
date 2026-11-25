@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f1ede2;
+  --bone: #e6e0d1;
+  --char: #2b2b2e;
+  --ink: #000000;
+  --lime: #c8f135;
+  --cobalt: #1e3fd8;
+  --mute: #6b675d;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+body {
+  background: var(--paper);
+  color: var(--char);
+  font-family: Archivo, "Helvetica Neue", Arial, sans-serif;
+  font-variation-settings: "wdth" 100;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--lime); color: var(--ink); }
+
+:focus-visible {
+  outline: 2px solid var(--cobalt);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Variable-width display type: the "tuning" device */
+.wide { font-variation-settings: "wdth" 125; }
+.narrow { font-variation-settings: "wdth" 62; }
+.display {
+  font-family: Archivo, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 800;
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+}
+.serif { font-family: Newsreader, Georgia, serif; }
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Network pulses */
+@keyframes rail { to { stroke-dashoffset: -36; } }
+.rail-pulse { stroke-dasharray: 3 15; animation: rail 1.4s linear infinite; }
+
+/* Platter spin */
+@keyframes spin33 { to { transform: rotate(360deg); } }
+.platter-spin { animation: spin33 1.8s linear infinite; }
+
+/* Range inputs, styled like hardware faders */
+input[type="range"].fader {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  width: 100%;
+  height: 28px;
+  cursor: pointer;
+}
+input[type="range"].fader::-webkit-slider-runnable-track { height: 4px; background: var(--char); }
+input[type="range"].fader::-moz-range-track { height: 4px; background: var(--char); }
+input[type="range"].fader::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 28px; margin-top: -12px;
+  background: var(--lime); border: 2px solid var(--ink);
+}
+input[type="range"].fader::-moz-range-thumb {
+  width: 14px; height: 24px; background: var(--lime); border: 2px solid var(--ink); border-radius: 0;
+}
+.on-dark input[type="range"].fader::-webkit-slider-runnable-track { background: #5a5a5f; }
+.on-dark input[type="range"].fader::-moz-range-track { background: #5a5a5f; }
+
+.grain {
+  background-image: radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
+  background-size: 4px 4px;
+}

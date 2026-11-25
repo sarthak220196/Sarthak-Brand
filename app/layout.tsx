@@ -8,9 +8,9 @@ import { siteUrl } from "@/lib/config";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: `${person.name} | One career. Several frequencies.`,
+  title: `${person.name} | ${person.statement}`,
   description:
-    "Sarthak Sighat: Mumbai-based commercial operator across product, GTM, enterprise sales and cross-border payments partnerships. Also a DJ.",
+    "Sarthak Sighat: Mumbai-based engineering graduate turned commercial operator. Business development, go-to-market, enterprise sales and strategic partnerships across B2B SaaS and fintech.",
   keywords: [
     "Sarthak Sighat",
     "cross-border payments",
@@ -18,12 +18,13 @@ export const metadata: Metadata = {
     "enterprise sales",
     "fintech",
     "GTM",
-    "DJ",
+    "business development",
+    "go-to-market",
     "Mumbai",
   ],
   openGraph: {
-    title: `${person.name} | One career. Several frequencies.`,
-    description: "I make money move. I make music move. I make things happen.",
+    title: `${person.name} | ${person.statement}`,
+    description: "People. Products. Markets. Business. I make things happen.",
     type: "website",
     locale: "en_IN",
   },

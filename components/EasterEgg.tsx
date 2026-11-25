@@ -3,75 +3,79 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const SECRET = "drop";
+const SECRET = "connect";
 
-/** Type d-r-o-p anywhere outside a text field. */
+/** Type c-o-n-n-e-c-t anywhere outside a text field. */
 export default function EasterEgg() {
   const reduce = useReducedMotion();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     let buf = "";
+    let hide = 0;
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement;
-      if (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable) return;
-      if (e.key.length !== 1) return;
+      if (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable || e.key.length !== 1) return;
       buf = (buf + e.key.toLowerCase()).slice(-SECRET.length);
       if (buf === SECRET) {
         buf = "";
         setShow(true);
-        boom();
-        window.setTimeout(() => setShow(false), 1600);
+        window.clearTimeout(hide);
+        hide = window.setTimeout(() => setShow(false), 2200);
       }
     };
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setShow(false);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("keydown", esc);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("keydown", esc);
+    };
   }, []);
+
+  // 12 nodes on a ring, all wiring into the centre
+  const nodes = Array.from({ length: 12 }, (_, i) => {
+    const a = (i / 12) * Math.PI * 2;
+    return [500 + Math.cos(a) * 380, 300 + Math.sin(a) * 240];
+  });
 
   return (
     <AnimatePresence>
       {show && (
         <motion.div
           role="status"
-          className="fixed inset-0 z-[95] flex items-center justify-center bg-lime text-ink"
+          className="fixed inset-0 z-[95] grid place-items-center bg-cobalt text-paper"
           initial={{ opacity: 0 }}
-          animate={reduce ? { opacity: 1 } : { opacity: 1, x: [0, -14, 12, -8, 6, 0] }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.45 }}
+          onClick={() => setShow(false)}
         >
-          <p className="display text-center text-[22vw] leading-none" style={{ fontVariationSettings: '"wdth" 125' }}>
-            Drop.
-            <span className="mt-4 block text-base font-semibold" style={{ fontVariationSettings: '"wdth" 100' }}>
-              You found it. The real one happens on the dance floor.
+          <svg viewBox="0 0 1000 600" className="absolute inset-0 h-full w-full" aria-hidden preserveAspectRatio="xMidYMid slice">
+            {nodes.map(([x, y], i) => (
+              <g key={i}>
+                <motion.path
+                  d={`M500 300 L${x.toFixed(0)} ${y.toFixed(0)}`}
+                  stroke="#C8F135"
+                  strokeWidth={2}
+                  initial={reduce ? false : ({ pathLength: 0 } as never)}
+                  animate={{ pathLength: 1 } as never}
+                  transition={{ delay: i * 0.04, duration: 0.5 }}
+                />
+                <circle cx={x} cy={y} r={9} fill="#F1EDE2" />
+              </g>
+            ))}
+          </svg>
+          <p className="display relative bg-cobalt px-6 text-center text-[clamp(3rem,12vw,10rem)]" style={{ fontVariationSettings: '"wdth" 125' }}>
+            Connected.
+            <span
+              className="mx-auto mt-5 block w-fit bg-cobalt px-3 py-1 text-base font-semibold"
+              style={{ fontVariationSettings: '"wdth" 100', letterSpacing: 0, lineHeight: 1.4 }}
+            >
+              You found the hidden one. Now let’s actually connect.
             </span>
           </p>
         </motion.div>
       )}
     </AnimatePresence>
   );
-}
-
-/** A short synthesised riser and sub drop. */
-function boom() {
-  try {
-    const AC =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    const ctx = new AC();
-    const t = ctx.currentTime;
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = "sine";
-    o.frequency.setValueAtTime(140, t);
-    o.frequency.exponentialRampToValueAtTime(38, t + 0.9);
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.6, t + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 1.2);
-    o.connect(g).connect(ctx.destination);
-    o.start(t);
-    o.stop(t + 1.25);
-    window.setTimeout(() => void ctx.close(), 1500);
-  } catch {
-    /* audio unavailable: the visual still plays */
-  }
 }

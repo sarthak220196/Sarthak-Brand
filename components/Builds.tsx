@@ -2,7 +2,7 @@
 
 import { ArrowUpRight } from "lucide-react";
 import { useState } from "react";
-import { projects } from "@/data/site";
+import { projects, type ProjectStatus } from "@/data/site";
 import SectionHead from "./SectionHead";
 
 // Clearly labelled sample data for the timeline demo. Not real location history.
@@ -11,7 +11,7 @@ const SAMPLE = [
   { time: "09:05", place: "Café", x: 120, y: 70 },
   { time: "10:00", place: "Office", x: 220, y: 92 },
   { time: "13:30", place: "Lunch", x: 290, y: 40 },
-  { time: "19:45", place: "Gig", x: 380, y: 112 },
+  { time: "19:45", place: "Dinner", x: 380, y: 112 },
   { time: "23:50", place: "Home", x: 460, y: 62 },
 ];
 
@@ -50,47 +50,69 @@ function TimelineDemo() {
   );
 }
 
-/** Abstract only: no invented features, users or claims. */
+/** Abstract: an AI answer where one cited source rises to the top. No real brands or data. */
 function BubblesArt() {
   return (
-    <div className="grid aspect-[16/9] place-items-center bg-cobalt" aria-hidden>
-      <svg viewBox="0 0 320 180" className="w-3/4">
-        <rect x="20" y="24" width="150" height="44" rx="22" fill="#F1EDE2" />
-        <rect x="150" y="80" width="150" height="44" rx="22" fill="#C8F135" />
-        <rect x="40" y="136" width="96" height="30" rx="15" fill="none" stroke="#F1EDE2" strokeWidth="2" strokeDasharray="5 5" />
+    <div className="grid aspect-[16/9] place-items-center bg-cobalt p-6" aria-hidden>
+      <svg viewBox="0 0 320 180" className="w-full max-w-md">
+        <rect x="10" y="8" width="300" height="30" rx="15" fill="none" stroke="#F1EDE2" strokeWidth="1.5" />
+        <circle cx="28" cy="23" r="5" fill="none" stroke="#F1EDE2" strokeWidth="1.5" />
+        <rect x="42" y="20" width="120" height="6" fill="#F1EDE2" opacity="0.6" />
+        <rect x="10" y="54" width="230" height="64" rx="18" fill="#F1EDE2" />
         {[0, 1, 2].map((k) => (
-          <circle key={k} cx={64 + k * 22} cy={151} r="4" fill="#F1EDE2" />
+          <rect key={k} x="26" y={70 + k * 14} width={[190, 160, 120][k]} height="6" fill="#2B2B2E" opacity={0.75} />
         ))}
+        <rect x="10" y="130" width="96" height="38" fill="#C8F135" />
+        <text x="22" y="153" fontSize="13" fontWeight="700" fill="#000" style={{ fontFamily: "'Archivo Variable', Archivo, sans-serif" }}>
+          Source 1
+        </text>
+        <rect x="114" y="130" width="96" height="38" fill="none" stroke="#F1EDE2" strokeOpacity="0.5" />
+        <rect x="218" y="130" width="92" height="38" fill="none" stroke="#F1EDE2" strokeOpacity="0.3" />
       </svg>
     </div>
   );
 }
 
+const statusStyle: Record<ProjectStatus, string> = {
+  Concept: "border border-dashed border-char",
+  Experiment: "border border-char",
+  Prototype: "bg-cobalt text-paper",
+  Deployed: "bg-ink text-lime",
+  "Shut down": "bg-char text-paper",
+};
+const statusMeaning: Record<ProjectStatus, string> = {
+  Concept: "Explored on paper: positioning, use cases, go-to-market. No product built.",
+  Experiment: "Built to learn how something works.",
+  Prototype: "Built and demonstrable to others.",
+  Deployed: "Live for real users.",
+  "Shut down": "Built and run with real businesses, then closed.",
+};
+
 export default function Builds() {
   return (
-    <section id="builds" aria-labelledby="builds-title" className="border-t border-char/15 bg-paper">
+    <section id="builds" aria-labelledby="builds-title" className="bg-bone">
       <div className="mx-auto max-w-grid px-5 py-28 md:px-10 md:py-36">
         <SectionHead
           id="builds-title"
           station="builds"
           width={118}
-          title="Built on the side"
-          intro={<p>Experiments and concepts, not finished companies. I build to understand how things work.</p>}
+          title="The builder"
+          intro={<p>Things I&apos;ve built outside my day job, from a curiosity experiment to a bootstrapped venture. Each one is labelled honestly, including the one we shut down.</p>}
         />
 
         <div className="mt-16">
           {projects.map((p, idx) => (
             <article key={p.name} className="grid gap-x-12 gap-y-8 border-t-2 border-ink py-12 lg:grid-cols-12">
               <div className="lg:col-span-5">
-                <p className="text-sm">
-                  <span className={`inline-block px-2 py-0.5 font-semibold ${p.kind === "Experiment" ? "bg-ink text-lime" : "border border-dashed border-char"}`}>
-                    {p.kind}
-                  </span>
+                <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
+                  <span className={`inline-block px-2 py-0.5 font-semibold ${statusStyle[p.status]}`}>{p.status}</span>
+                  <span className="text-mute">{statusMeaning[p.status]}</span>
                 </p>
                 <h3 className="mt-4 text-[clamp(1.9rem,3.4vw,2.8rem)] font-bold leading-[1.02] tracking-tight" style={{ fontVariationSettings: '"wdth" 100' }}>
                   {p.name}
                 </h3>
                 <p className="serif mt-4 text-[1.15rem] leading-[1.55]">{p.summary}</p>
+                {p.note && <p className="mt-4 border-l-2 border-cobalt pl-3 text-[16px] font-medium leading-snug">{p.note}</p>}
                 <ul className="mt-6 flex flex-wrap gap-1.5" aria-label="Built with">
                   {p.stack.map((s) => (
                     <li key={s} className="border border-char/25 px-2.5 py-1 text-[13px]">

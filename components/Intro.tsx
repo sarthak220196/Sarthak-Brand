@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const SWEEP = ["Enterprise", "Payments", "Static", "Music", "Comeback", "Sarthak"];
+const SWEEP = ["People", "Products", "Static", "Markets", "Business", "Sarthak"];
 
 /** Opening: a radio dial sweeps past stations and locks onto Sarthak. Plays once per session. */
 export default function Intro() {

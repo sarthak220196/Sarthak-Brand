@@ -34,6 +34,24 @@ Every date and metric on the site, checked against the creative brief. Last chec
 | Unlimit | 2 enterprise merchants closed | Two enterprise merchants | Yes |
 | Unlimit | Insurance, fashion and e-commerce, Mswipe, ecosystem relationships | All marked "In pipeline" | Yes |
 
+## Direction 3.0 changes
+
+- All DJ and music content removed: 19 references across 14 files, including the tagline, the DJ section, settings, the menu item, the "drop" easter egg and its sound, and the "Gig" stop in the sample timeline. A source search for dj, music, deck, mixer, gig, dance, Bollywood, Hollywood, artist and mashup now returns nothing.
+- The case studies (Creative Awards, Sprinto, PortOne) use only lines from the brief. Their Outcome column shows the same verified figures as above.
+- Every Toolkit evidence line maps to a fact in the brief. Pipeline items are marked "In pipeline" there too.
+- "How I work" principles each cite a specific, supplied fact.
+- The bio is built only from supplied facts until you write your own in `site.config.ts`.
+
+## Still needed from Sarthak
+
+1. **Photos:** a portrait, plus optionally one at work, one travelling and one of Mumbai. Real photos only.
+2. **Education:** degree, institution and years.
+3. **CV:** a PDF. Email and LinkedIn are now added.
+4. **Job titles:** exact titles for Creative Awards & Rewards, Rocketium, Toddle, PortOne and Unlimit. The site currently describes the work instead.
+5. **Chatterbubble details (optional):** your role (for example co-founder), the dates it ran, and whether "Nagent AI" was part of it. RememberMe is now confirmed as an Experiment with an MVP, and Chatterbubble as a venture that was shut down.
+6. **Your own bio (optional):** a few lines in your voice, plus any personal background you'd like included (for example where you grew up or studied).
+7. **Travel:** real places with a photo and a line each. The Field notes block stays hidden until there's at least one.
+
 ## Please confirm
 
 1. **Overlap:** Creative Awards & Rewards ends in 2021 and Rocketium starts in January 2021. If Creative Awards ended in January 2021 or earlier, consider adding the month.
@@ -42,8 +60,3 @@ Every date and metric on the site, checked against the creative brief. Last chec
 4. **Rocketium regions:** "new regions" weren't named, so Rocketium isn't on the map. The map notes this.
 5. **Unlimit status:** when a pipeline item closes, change `"pipeline"` to `"closed"` in `data/site.ts`. Never before it's signed.
 
-## Content removed in this release
-
-- "The questions I was testing" on the Chatterbubble card. This wasn't supplied by you and has been removed.
-- The full playable DJ decks. These move to the future artist site.
-- Repeated "back to the decks" lines across the hero, comeback and DJ sections.

@@ -20,6 +20,13 @@ export interface Figure {
   label: string;
 }
 
+export interface CaseStudy {
+  /** Every line must come from the CV or brief. */
+  context: string;
+  did: string[];
+  /** The outcome column shows the role's figures. */
+}
+
 export interface Role {
   company: string;
   dates: string;
@@ -30,6 +37,7 @@ export interface Role {
   points: string[];
   ledger?: LedgerItem[];
   note?: string;
+  caseStudy?: CaseStudy;
 }
 
 export type StageId = "build" | "grow" | "lead" | "sell" | "connect";
@@ -41,27 +49,26 @@ export interface Stage {
   years: string;
   lesson: string;
   carriedForward: string;
+  /** Toolkit capabilities this chapter gives evidence for. */
+  capabilities: CapabilityId[];
   roles: Role[];
 }
 
 export const person = {
   name: "Sarthak Sighat",
   base: "Mumbai, India",
-  now: "Strategic partnerships in cross-border payments at Unlimit",
-  intro:
-    "Engineering graduate turned commercial operator. I've worked across product, go-to-market, enterprise sales and, now, strategic partnerships in global payments. Also a DJ.",
-  taglines: ["I make money move.", "I make music move.", "I make things happen."],
-  closing: [
-    "Engineer by education.",
-    "Commercial operator by experience.",
-    "DJ by instinct.",
-    "Builder by curiosity.",
-  ],
+  statement: "I connect people, technology and opportunity.",
+  kicker: "I make things happen.",
+  pillars: ["People.", "Products.", "Markets.", "Business."],
+  identity:
+    "Engineering graduate turned commercial operator. Product, go-to-market, sales leadership, enterprise sales and strategic partnerships, across B2B SaaS and fintech, in markets from APAC to the Americas.",
+  now: "International business development and strategic partnerships at Unlimit",
 };
 
 export const stages: Stage[] = [
   {
     id: "build",
+    capabilities: ["commercial", "product"],
     verb: "Build",
     chapter: "The builder",
     years: "2019–2021",
@@ -73,15 +80,17 @@ export const stages: Stage[] = [
         dates: "2019–2021",
         role: "Product strategy, demand generation and sales",
         figures: [{ value: "$300K+", label: "revenue from a B2B product, sold to hospitals and airlines" }],
-        points: [
-          "Helped develop and launch a B2B product.",
-          "Owned product strategy, demand generation and sales execution.",
-        ],
+        points: [],
+        caseStudy: {
+          context: "A B2B product, taken from development into the market.",
+          did: ["Owned product strategy.", "Owned demand generation.", "Owned sales execution."],
+        },
       },
     ],
   },
   {
     id: "grow",
+    capabilities: ["gtm", "enterprise"],
     verb: "Grow",
     chapter: "The GTM operator",
     years: "2021–2023",
@@ -111,6 +120,7 @@ export const stages: Stage[] = [
   },
   {
     id: "lead",
+    capabilities: ["leadership", "gtm"],
     verb: "Lead",
     chapter: "The team lead",
     years: "2023–2024",
@@ -127,12 +137,17 @@ export const stages: Stage[] = [
           { value: "$300K+", label: "qualified pipeline, APAC and USA" },
           { value: "+35%", label: "lead-to-meeting conversion" },
         ],
-        points: ["Built the company's first structured outbound engine."],
+        points: [],
+        caseStudy: {
+          context: "Sprinto had no structured outbound engine yet.",
+          did: ["Built the company's first structured outbound engine.", "Led and coached four SDRs across inbound and outbound."],
+        },
       },
     ],
   },
   {
     id: "sell",
+    capabilities: ["enterprise", "commercial", "product"],
     verb: "Sell",
     chapter: "The enterprise seller",
     years: "2024–2026",
@@ -150,11 +165,14 @@ export const stages: Stage[] = [
           { value: "90–104%", label: "of quarterly quota" },
           { value: "$30K–$60K", label: "ARR per enterprise contract closed" },
         ],
-        points: [
-          "Worked with global e-commerce and fintech merchants.",
-          "Led discovery, demos, negotiation and onboarding.",
-          "Worked with product and engineering on API and integration-led solutions.",
-        ],
+        points: [],
+        caseStudy: {
+          context: "Full-cycle enterprise sales to global e-commerce and fintech merchants, across SEA, the EU and the USA.",
+          did: [
+            "Led discovery, demos, negotiation and onboarding.",
+            "Worked with product and engineering on API and integration-led solutions.",
+          ],
+        },
       },
       {
         company: "Glomo",
@@ -169,6 +187,7 @@ export const stages: Stage[] = [
   },
   {
     id: "connect",
+    capabilities: ["partnerships", "enterprise", "gtm"],
     verb: "Connect",
     chapter: "The partnerships builder",
     years: "2026 – now",
@@ -194,7 +213,8 @@ export const stages: Stage[] = [
   },
 ];
 
-export const capabilities = [
+/** Domain depth from the payments chapters. Listed as knowledge areas, not claims of outcomes. */
+export const paymentsDepth = [
   "Cross-border payments",
   "Global acquiring",
   "Payment service providers",
@@ -203,10 +223,106 @@ export const capabilities = [
   "Local payment ecosystems",
   "Jurisdiction-specific regulation",
   "Enterprise merchant acquisition",
-  "Strategic partnerships",
-  "Commercial negotiation",
-  "International GTM strategy",
-  "International business development",
+];
+
+export type CapabilityId = "commercial" | "enterprise" | "gtm" | "partnerships" | "product" | "leadership";
+
+export interface Evidence {
+  company: string;
+  text: string;
+  pipeline?: boolean;
+}
+
+export interface Capability {
+  id: CapabilityId;
+  name: string;
+  short: string;
+  /** Plain description of the capability, no claims. */
+  summary: string;
+  /** Kinds of problem this applies to. Framed as uses, not as past results. */
+  usefulFor: string[];
+  evidence: Evidence[];
+}
+
+export const toolkit: Capability[] = [
+  {
+    id: "commercial",
+    name: "Commercial strategy",
+    short: "Commercial",
+    summary: "Turning a product or opportunity into a commercial plan, then owning the numbers that follow.",
+    usefulFor: ["Taking a new product to market", "Structuring and negotiating commercial deals"],
+    evidence: [
+      { company: "Creative Awards & Rewards", text: "Owned product strategy, demand generation and sales execution for a B2B product that generated $300K+." },
+      { company: "PortOne", text: "Led discovery, demos and negotiation; closed enterprise contracts worth $30K–$60K ARR." },
+      { company: "Unlimit", text: "Closed two strategic partners and two enterprise merchants." },
+      { company: "Side projects", text: "Chatterbubble: chose to shut down a bootstrapped venture without product-market fit rather than burn more." },
+    ],
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise growth and business development",
+    short: "Enterprise",
+    summary: "Building qualified pipeline with large customers and taking it through to signature and onboarding.",
+    usefulFor: ["Opening and growing enterprise accounts", "Long, multi-stakeholder sales cycles"],
+    evidence: [
+      { company: "PortOne", text: "Built and managed $500K+ qualified pipeline; 90–104% of quarterly quota." },
+      { company: "Glomo", text: "Closed and onboarded three customers end to end; progressed several opportunities to late-stage evaluation." },
+      { company: "Unlimit", text: "Two enterprise merchants closed." },
+      { company: "Unlimit", text: "Opportunities across insurance, and fashion and e-commerce.", pipeline: true },
+    ],
+  },
+  {
+    id: "gtm",
+    name: "Go-to-market and international expansion",
+    short: "GTM",
+    summary: "Designing how a company reaches a new market, and building the outbound engine to do it.",
+    usefulFor: ["Entering new regions", "Building outbound from zero"],
+    evidence: [
+      { company: "Rocketium", text: "Built outbound motions for new regions; 190%+ of quota." },
+      { company: "Toddle", text: "Designed outbound GTM strategy across APAC, North America and LATAM; $300K+ outbound pipeline; SQLs up 25%." },
+      { company: "Sprinto", text: "Built the company's first structured outbound engine." },
+      { company: "PortOne", text: "Pipeline across SEA, the EU and the USA." },
+      { company: "Side projects", text: "Chatterbubble: took an AEO/GEO offering to businesses, especially cybersecurity brands looking for new leads." },
+    ],
+  },
+  {
+    id: "partnerships",
+    name: "Strategic partnerships and ecosystems",
+    short: "Partnerships",
+    summary: "Finding the partners that move a business further than direct sales can, and making the relationship work.",
+    usefulFor: ["Building partner and channel ecosystems", "Working with larger players across a market"],
+    evidence: [
+      { company: "Unlimit", text: "Two strategic partners closed." },
+      { company: "Unlimit", text: "A significant opportunity with Mswipe.", pipeline: true },
+      { company: "Unlimit", text: "Relationships with larger players across international payments.", pipeline: true },
+    ],
+  },
+  {
+    id: "product",
+    name: "Product and technical fluency",
+    short: "Product",
+    summary: "Engineering education, product ownership and hands-on building, so technical conversations stay grounded.",
+    usefulFor: ["Selling API and integration-led products", "Sitting between customers, product and engineering"],
+    evidence: [
+      { company: "Education", text: "Engineering graduate." },
+      { company: "Creative Awards & Rewards", text: "Involved in developing and launching a B2B product." },
+      { company: "PortOne", text: "Worked with product and engineering on API and integration-led solutions." },
+      { company: "Side projects", text: "Built the RememberMe MVP with Next.js, Mapbox and location-history JSON decoding." },
+      { company: "Side projects", text: "Chatterbubble: built around AEO and GEO, ranking businesses in AI search." },
+    ],
+  },
+  {
+    id: "leadership",
+    name: "Leadership and cross-functional execution",
+    short: "Leadership",
+    summary: "Raising the output of a team and the system around it, and working across functions to get things shipped.",
+    usefulFor: ["Leading and coaching early-career teams", "Turning playbooks into repeatable process"],
+    evidence: [
+      { company: "Rocketium", text: "Mentored junior SDRs and optimised sales playbooks." },
+      { company: "Sprinto", text: "Led and coached four SDRs; lead-to-meeting conversion up 35%." },
+      { company: "PortOne", text: "Worked across product and engineering on customer solutions." },
+    ],
+  },
 ];
 
 export interface Region {
@@ -246,21 +362,23 @@ export const routes: Route[] = [
   { company: "Unlimit", dates: "Apr 2026 – present", regions: "global", summary: "Cross-border payments with a primarily global focus. Specific markets aren't listed here." },
 ];
 
-export const dj = {
-  history: [
-    "Won DJ competitions in college.",
-    "Played New Year's parties and other live events.",
-    "Took a hiatus for work and life.",
-    "Now returning to it, seriously.",
-  ],
-  setup: ["Pioneer DDJ-FLX4", "FL Studio 2025"],
-  focus: "Bollywood × Hollywood mashups",
-};
+/**
+ * Project status, shown as a label:
+ *  "Concept"    explored on paper: positioning, use cases, GTM. No product.
+ *  "Experiment" built to learn; works on my machine.
+ *  "Prototype"  built and demonstrable to others.
+ *  "Deployed"   live for real users.
+ *  "Shut down"  built and run with real businesses, then closed.
+ * Use the lowest one that is true.
+ */
+export type ProjectStatus = "Concept" | "Experiment" | "Prototype" | "Deployed" | "Shut down";
 
 export interface Project {
   name: string;
-  kind: "Experiment" | "Concept";
+  status: ProjectStatus;
   summary: string;
+  /** An honest closing line: what happened, or why it stopped. */
+  note?: string;
   stack: string[];
   url: string | null;
 }
@@ -268,20 +386,35 @@ export interface Project {
 export const projects: Project[] = [
   {
     name: "RememberMe / I-WAS-THERE",
-    kind: "Experiment",
+    status: "Experiment",
     summary:
-      "Turns Google Timeline location history into an interactive personal timeline. Decode the raw JSON, put it on a map, and scrub back through where you've been.",
+      "A curiosity project. It turns Google Timeline location history into an interactive personal timeline you can scrub back through. Scroll far enough and you get that moment: wait, I was there. An old spot, a particular place, and a memory unlocks.",
+    note: "I built an MVP and never took it further. It's still an experiment I'm proud of.",
     stack: ["Next.js", "Mapbox", "Location-history JSON decoding", "Timeline visualisation"],
     url: null,
   },
   {
-    name: "Chatterbubble / Nagent AI",
-    kind: "Concept",
+    name: "Chatterbubble",
+    status: "Shut down",
     summary:
-      "An AI-led business concept, explored through product positioning, B2B use cases and go-to-market experiments.",
-    stack: ["Positioning", "B2B use cases", "GTM experiments"],
+      "A bootstrapped venture built around AEO and GEO: helping businesses rank in AI search and turn that visibility into leads. Beyond marketing, it gave them a new inbound channel. We engaged with a lot of businesses, especially cybersecurity brands looking for new leads.",
+    note: "We shut it down because we didn't find product-market fit and didn't want to burn more.",
+    stack: ["Answer engine optimisation (AEO)", "Generative engine optimisation (GEO)", "AI search", "Inbound lead generation"],
     url: null,
   },
+  // Add other genuine projects here with the same shape.
+]
+
+/** Things Sarthak has said he enjoys. Add only what's true. */
+export const interests = ["Travel and new places", "Technology", "Building things", "Interesting conversations", "New ideas"];
+
+/** How I work: each principle is tied to something that actually happened. */
+export const workingStyle = [
+  { principle: "Build the system, not just the number.", proof: "Built Sprinto's first structured outbound engine and coached four SDRs to run it." },
+  { principle: "Close the loop.", proof: "At Glomo, closed and onboarded three customers end to end. At PortOne, led everything from discovery to onboarding." },
+  { principle: "Work across the table.", proof: "At PortOne, worked with product and engineering on API and integration-led solutions." },
+  { principle: "Stay curious.", proof: "Built RememberMe, a location-history timeline, simply to see what it would feel like." },
+  { principle: "Know when to stop.", proof: "Shut down Chatterbubble, a bootstrapped venture, when we hadn't found product-market fit, rather than burn more." },
 ];
 
 /**
@@ -298,14 +431,13 @@ export interface Place {
 export const places: Place[] = [];
 
 export const stations = [
-  { id: "top", label: "Hello", freq: "88.0" },
-  { id: "work", label: "Work", freq: "92.4" },
-  { id: "network", label: "Network", freq: "96.1" },
-  { id: "comeback", label: "Comeback", freq: "99.9" },
-  { id: "dj", label: "DJ", freq: "101.7" },
-  { id: "builds", label: "Builds", freq: "104.3" },
-  { id: "explorer", label: "Explorer", freq: "106.5" },
-  { id: "hello", label: "Say hi", freq: "108.0" },
+  { id: "top", label: "Intro", freq: "88.0" },
+  { id: "work", label: "Journey", freq: "92.4" },
+  { id: "network", label: "Markets", freq: "96.1" },
+  { id: "toolkit", label: "Toolkit", freq: "99.9" },
+  { id: "builds", label: "Builder", freq: "103.1" },
+  { id: "person", label: "Person", freq: "105.7" },
+  { id: "hello", label: "Let's talk", freq: "108.0" },
 ] as const;
 
 export type StationId = (typeof stations)[number]["id"];

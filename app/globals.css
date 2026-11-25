@@ -63,7 +63,7 @@ g[role="button"]:focus { outline: none; }
 .tabular { font-variant-numeric: tabular-nums; }
 .text-balance { text-wrap: balance; }
 
-/* Range inputs styled like a mixer fader */
+/* Range inputs styled like a hardware slider */
 input[type="range"].fader {
   -webkit-appearance: none;
   appearance: none;

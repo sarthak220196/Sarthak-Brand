@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { stages, type Stage, type StageId, type Status } from "@/data/site";
-import { scrollToId } from "@/lib/events";
+import { stages, toolkit, type Stage, type StageId, type Status } from "@/data/site";
+import { emit, scrollToId } from "@/lib/events";
 import SectionHead from "./SectionHead";
 import StageVisual, { caption, type Palette } from "./StageVisual";
 
@@ -191,6 +191,29 @@ function Chapter({
           <p className="mt-5 text-lg font-semibold">{s.chapter}</p>
           <p className="serif mt-2 max-w-[26rem] text-[1.35rem] leading-[1.4]">{s.lesson}</p>
 
+          <div className="mt-7">
+            <p className={`text-sm ${t.muted}`}>Capabilities this chapter proves</p>
+            <ul className="mt-2 flex flex-wrap gap-1.5">
+              {s.capabilities.map((c) => {
+                const cap = toolkit.find((k) => k.id === c)!;
+                return (
+                  <li key={c}>
+                    <button
+                      onClick={() => {
+                        emit("toolkit:select", c);
+                        scrollToId("toolkit");
+                      }}
+                      className="border border-current px-2.5 py-1 text-[13px] font-medium opacity-90 transition hover:opacity-100 hover:[box-shadow:inset_0_-3px_0_currentColor]"
+                      aria-label={`${cap.name}: see the evidence in the Toolkit`}
+                    >
+                      {cap.name}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
           <figure className="mt-10 max-w-[20rem]">
             <div className="aspect-square">
               <StageVisual stage={s.id} p={t.svg} />
@@ -212,6 +235,39 @@ function Chapter({
               <p className="mt-4 font-semibold">{r.role}</p>
               {r.context && <p className={`text-sm ${t.muted}`}>{r.context}</p>}
 
+              {r.caseStudy ? (
+                <div className={`mt-8 grid gap-x-8 gap-y-8 border-t pt-6 md:grid-cols-[1fr_1fr_1.15fr] ${t.rule}`}>
+                  <div>
+                    <p className={`text-sm ${t.muted}`}>Context</p>
+                    <p className="serif mt-2 text-[1.15rem] leading-[1.45]">{r.caseStudy.context}</p>
+                  </div>
+                  <div>
+                    <p className={`text-sm ${t.muted}`}>What I did</p>
+                    <ul className="mt-2 space-y-2">
+                      {r.caseStudy.did.map((d) => (
+                        <li key={d} className="flex gap-3 text-[16px] leading-snug">
+                          <span aria-hidden className={`mt-[0.6em] h-[2px] w-3 shrink-0 ${t.bullet}`} />
+                          {d}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className={`text-sm ${t.muted}`}>Outcome</p>
+                    <dl className="mt-2 space-y-4">
+                      {r.figures?.map((f) => (
+                        <div key={f.value + f.label} className="flex flex-col">
+                          <dt className={`order-2 text-[14px] leading-snug ${t.muted}`}>{f.label}</dt>
+                          <dd className={`display tabular -order-1 whitespace-nowrap text-[clamp(2.2rem,3vw,3rem)] ${t.figure}`} style={{ fontVariationSettings: '"wdth" 76' }}>
+                            {f.value}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </div>
+              ) : (
+                <>
               {r.figures && (
                 <dl className={`mt-8 grid gap-x-8 gap-y-7 ${r.figures.length > 1 ? "sm:grid-cols-3" : ""}`}>
                   {r.figures.map((f) => (
@@ -237,6 +293,8 @@ function Chapter({
                     </li>
                   ))}
                 </ul>
+              )}
+                </>
               )}
 
               {r.ledger && (

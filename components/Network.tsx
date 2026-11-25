@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Pause, Play } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { capabilities, home, regions, routes, type Route } from "@/data/site";
+import { home, regions, routes, type Route } from "@/data/site";
 import { LAND_DOTS, DOT_STEP } from "@/data/worldDots";
 import SectionHead from "./SectionHead";
 
@@ -87,12 +87,12 @@ export default function Network() {
           id="network-title"
           station="network"
           tone="dark"
-          width={84}
-          title="Where the money moves"
+          width={78}
+          title="Where the work has reached"
           intro={
             <p>
-              Every rail starts in Mumbai. Play the journey to watch the markets light up chapter by chapter, or pick a company
-              or a market to explore it.
+              Every route starts in Mumbai. Play the journey to watch markets light up company by company, or pick a company or
+              a market to explore it.
             </p>
           }
         />
@@ -300,17 +300,6 @@ export default function Network() {
           </aside>
         </div>
 
-        {/* Capabilities */}
-        <div className="mt-24 grid gap-8 border-t border-paper/15 pt-10 lg:grid-cols-12">
-          <h3 className="text-sm text-paper/55 lg:col-span-2">What I work with</h3>
-          <ul className="grid gap-x-10 sm:grid-cols-2 lg:col-span-10 lg:grid-cols-3">
-            {capabilities.map((c) => (
-              <li key={c} className="border-b border-paper/10 py-3 text-[1.15rem]" style={{ fontVariationSettings: '"wdth" 104' }}>
-                {c}
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
     </section>
   );

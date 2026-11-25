@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Sarthak Sighat: I make money move. I make music move. I make things happen.";
+export const alt = "Sarthak Sighat: I connect people, technology and opportunity.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -12,17 +12,22 @@ export default function OG() {
           <span style={{ fontWeight: 700 }}>Sarthak Sighat</span>
           <span style={{ color: "#1E3FD8" }}>88.0 Mumbai</span>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", fontSize: 92, fontWeight: 800, lineHeight: 1, color: "#000", letterSpacing: -3 }}>
-          {[
-            ["#1E3FD8", "I make money move."],
-            ["#C8F135", "I make music move."],
-            ["#2B2B2E", "I make things happen."],
-          ].map(([c, t]) => (
-            <div key={t} style={{ display: "flex", alignItems: "center", gap: 28 }}>
-              <div style={{ width: 64, height: 36, background: c }} />
-              <span>{t}</span>
-            </div>
-          ))}
+        <div style={{ display: "flex", flexDirection: "column", color: "#000" }}>
+          <div style={{ fontSize: 88, fontWeight: 800, lineHeight: 1, letterSpacing: -3 }}>I connect people,</div>
+          <div style={{ fontSize: 88, fontWeight: 800, lineHeight: 1, letterSpacing: -3 }}>technology and opportunity.</div>
+          <div style={{ display: "flex", gap: 18, marginTop: 40 }}>
+            {[
+              ["#1E3FD8", "People."],
+              ["#C8F135", "Products."],
+              ["#000000", "Markets."],
+              ["#9A968C", "Business."],
+            ].map(([c, t]) => (
+              <div key={t} style={{ display: "flex", flexDirection: "column", width: 240 }}>
+                <div style={{ height: 10, background: c }} />
+                <span style={{ fontSize: 40, fontWeight: 800, marginTop: 10 }}>{t}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     ),

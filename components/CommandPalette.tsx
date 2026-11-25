@@ -1,10 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Copy, CornerDownLeft, FileText, Radio, Search } from "lucide-react";
+import { ArrowUpRight, Copy, CornerDownLeft, Download, Radio, Search } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { stations } from "@/data/site";
-import { contact, djLinks } from "@/lib/config";
+import { contact } from "@/lib/config";
 import { on, scrollToId } from "@/lib/events";
 
 interface Item {
@@ -18,7 +18,7 @@ interface Item {
 
 const openUrl = (u: string) => window.open(u, "_blank", "noopener,noreferrer");
 
-export default function CommandPalette() {
+export default function CommandPalette({ cv }: { cv: string | null }) {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [sel, setSel] = useState(0);
@@ -37,7 +37,7 @@ export default function CommandPalette() {
   const items = useMemo<Item[]>(() => {
     const list: Item[] = stations.map((s) => ({
       id: s.id,
-      label: s.label === "Hello" ? "Back to the top" : s.label,
+      label: s.label === "Intro" ? "Back to the top" : s.label,
       hint: s.freq,
       group: "Sections",
       icon: <Radio size={15} aria-hidden />,
@@ -51,11 +51,20 @@ export default function CommandPalette() {
       });
     }
     if (contact.linkedin) list.push({ id: "li", label: "Open LinkedIn", hint: "New tab", group: "Contact", icon: <ArrowUpRight size={15} aria-hidden />, run: () => openUrl(contact.linkedin!) });
-    if (contact.cv) list.push({ id: "cv", label: "Open CV", hint: "PDF", group: "Contact", icon: <FileText size={15} aria-hidden />, run: () => openUrl(contact.cv!) });
+    if (cv)
+      list.push({
+        id: "cv", label: "Download CV", hint: "PDF", group: "Contact", icon: <Download size={15} aria-hidden />,
+        run: () => {
+          const a = document.createElement("a");
+          a.href = cv;
+          if (!/^https?:/i.test(cv)) a.download = "Sarthak-Sighat-CV.pdf";
+          else a.target = "_blank";
+          a.click();
+        },
+      });
     if (contact.booking) list.push({ id: "book", label: "Book a call", hint: "New tab", group: "Contact", icon: <ArrowUpRight size={15} aria-hidden />, run: () => openUrl(contact.booking!) });
-    if (djLinks.artistSite) list.push({ id: "dj", label: "Visit the artist site", hint: "New tab", group: "Contact", icon: <ArrowUpRight size={15} aria-hidden />, run: () => openUrl(djLinks.artistSite!) });
     return list;
-  }, []);
+  }, [cv]);
 
   const filtered = items.filter((i) => `${i.label} ${i.hint}`.toLowerCase().includes(q.trim().toLowerCase()));
 
@@ -170,7 +179,7 @@ export default function CommandPalette() {
               </div>
               <ul ref={listRef} id="palette-list" role="listbox" aria-label="Results" className="max-h-[52vh] overflow-y-auto py-2">
                 {filtered.length === 0 && (
-                  <li className="px-5 py-4 text-mute">No match. Try “work”, “network” or “email”.</li>
+                  <li className="px-5 py-4 text-mute">No match. Try “journey”, “toolkit” or “email”.</li>
                 )}
                 {filtered.map((item, i) => {
                   const showGroup = item.group !== lastGroup;

@@ -1,13 +1,14 @@
 /** Tiny window-event bus so the menu can drive other sections. */
-export type AppEvent = "palette:open";
+export type AppEvent = "palette:open" | "toolkit:select" | "cv:available";
 
-export function emit(name: AppEvent) {
-  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(name));
+export function emit(name: AppEvent, detail?: string) {
+  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(name, { detail }));
 }
 
-export function on(name: AppEvent, fn: () => void) {
-  window.addEventListener(name, fn);
-  return () => window.removeEventListener(name, fn);
+export function on(name: AppEvent, fn: (detail?: string) => void) {
+  const h = (e: Event) => fn((e as CustomEvent<string | undefined>).detail);
+  window.addEventListener(name, h);
+  return () => window.removeEventListener(name, h);
 }
 
 export const prefersReducedMotion = () =>

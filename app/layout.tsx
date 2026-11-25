@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import "@fontsource-variable/archivo/wdth.css";
+import "@fontsource-variable/newsreader/opsz.css";
+import "@fontsource-variable/newsreader/opsz-italic.css";
 import "./globals.css";
-import { person, siteUrl } from "@/data/site";
+import { person } from "@/data/site";
+import { siteUrl } from "@/lib/config";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -36,15 +40,6 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap"
-        />
-      </head>
       <body>{children}</body>
     </html>
   );

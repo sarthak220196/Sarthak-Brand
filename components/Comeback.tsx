@@ -1,31 +1,37 @@
 "use client";
 
-import { useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 const beats = [
   {
+    label: "Pause",
     title: "Life pressed pause.",
-    body: "A serious shoulder injury. Surgery. Then a long rehabilitation that interrupted the rhythm of everything, work included.",
+    body: "A serious shoulder injury, then surgery, then a long rehabilitation. The rhythm I was used to stopped.",
+    wdth: 110,
   },
   {
+    label: "Rebuild",
     title: "The quiet part.",
-    body: "Stepping back. Recovering. Rebuilding strength one small, unglamorous session at a time. It was slow, and it wasn't a straight line.",
+    body: "Recovering. Rebuilding strength one small, unglamorous session at a time. Slow, and not a straight line.",
+    wdth: 62,
   },
   {
+    label: "Play",
     title: "I found my way back to play.",
-    body: "Back to work I care about. Back towards the decks. Patience turned out to be a skill too.",
+    body: "Momentum came back gradually, not all at once. Patience turned out to be a skill, too.",
+    wdth: 118,
   },
 ];
 
-/** Amplitude of the waveform as the story scrolls: full, collapse, a slow uneven return. */
+/** Waveform amplitude across the scroll: full, collapse, a slow and uneven return. */
 function amp(p: number) {
-  if (p < 0.22) return 1;
-  if (p < 0.38) return 1 - ((p - 0.22) / 0.16) * 0.97;
-  if (p < 0.55) return 0.03;
-  const r = (p - 0.55) / 0.4;
-  const dip = r > 0.35 && r < 0.5 ? 0.18 : 0; // a setback in the middle of the return
-  return Math.min(1, 0.03 + Math.pow(Math.max(0, r), 1.6) - dip);
+  if (p < 0.2) return 1;
+  if (p < 0.34) return 1 - ((p - 0.2) / 0.14) * 0.97;
+  if (p < 0.52) return 0.03;
+  const r = (p - 0.52) / 0.42;
+  const dip = r > 0.38 && r < 0.52 ? 0.16 : 0; // a setback inside the recovery
+  return Math.min(1, 0.03 + Math.pow(Math.max(0, r), 1.5) - dip);
 }
 
 export default function Comeback() {
@@ -44,38 +50,35 @@ export default function Comeback() {
   useEffect(() => {
     if (reduce) return;
     const c = canvas.current;
-    if (!c) return;
-    const ctx = c.getContext("2d");
-    if (!ctx) return;
+    const ctx = c?.getContext("2d");
+    if (!c || !ctx) return;
     let raf = 0;
     let t = 0;
     let visible = false;
     const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting));
     io.observe(c);
-
     const draw = () => {
       raf = requestAnimationFrame(draw);
       if (!visible) return;
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const w = c.clientWidth;
       const h = c.clientHeight;
-      if (c.width !== w * dpr) {
-        c.width = w * dpr;
-        c.height = h * dpr;
+      if (c.width !== Math.round(w * dpr)) {
+        c.width = Math.round(w * dpr);
+        c.height = Math.round(h * dpr);
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
       const a = amp(progress.current);
-      t += 0.035;
-      const bars = Math.floor(w / 7);
-      for (let i = 0; i < bars; i++) {
-        const x = i * 7;
-        const n =
-          Math.abs(Math.sin(i * 0.21 + t) * 0.6 + Math.sin(i * 0.047 - t * 0.7) * 0.4) *
-          (0.55 + 0.45 * Math.sin(i * 1.7));
-        const bh = Math.max(2, n * a * h * 0.8);
-        ctx.fillStyle = a > 0.6 ? "#C8F135" : a > 0.1 ? "#F1EDE2" : "#6B675D";
-        ctx.fillRect(x, h / 2 - bh / 2, 4, bh);
+      t += 0.03;
+      const gap = 6;
+      const n = Math.floor(w / gap);
+      ctx.fillStyle = a > 0.7 ? "#C8F135" : a > 0.12 ? "#F1EDE2" : "#55524B";
+      for (let i = 0; i < n; i++) {
+        const v =
+          Math.abs(Math.sin(i * 0.19 + t) * 0.6 + Math.sin(i * 0.051 - t * 0.6) * 0.4) * (0.5 + 0.5 * Math.abs(Math.sin(i * 1.37)));
+        const bh = Math.max(1.5, v * a * h * 0.92);
+        ctx.fillRect(i * gap, h / 2 - bh / 2, 3, bh);
       }
     };
     draw();
@@ -85,50 +88,77 @@ export default function Comeback() {
     };
   }, [reduce]);
 
+  const marker = (
+    <p className="tabular text-sm text-paper/55">
+      <span className="text-lime">99.9</span> Comeback
+    </p>
+  );
+
   if (reduce) {
     return (
-      <section id="comeback" aria-labelledby="comeback-title" className="bg-ink px-5 py-24 text-paper md:px-10">
-        <h2 id="comeback-title" className="sr-only">The comeback</h2>
-        <div className="mx-auto max-w-3xl space-y-14">
-          {beats.map((b) => (
-            <div key={b.title}>
-              <p className="display text-5xl" style={{ fontVariationSettings: '"wdth" 90' }}>{b.title}</p>
-              <p className="serif mt-4 text-xl leading-relaxed text-paper/80">{b.body}</p>
-            </div>
-          ))}
+      <section id="comeback" aria-labelledby="comeback-title" className="bg-ink px-5 py-28 text-paper md:px-10">
+        <div className="mx-auto max-w-grid">
+          {marker}
+          <h2 id="comeback-title" className="sr-only">The comeback</h2>
+          <ol className="mt-10 max-w-3xl space-y-16">
+            {beats.map((b) => (
+              <li key={b.label}>
+                <p className="text-sm text-lime">{b.label}</p>
+                <p className="display mt-2 text-[clamp(2.6rem,6vw,5rem)]" style={{ fontVariationSettings: `"wdth" ${b.wdth}` }}>{b.title}</p>
+                <p className="serif mt-4 max-w-xl text-xl leading-relaxed text-paper/80">{b.body}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
     );
   }
 
   return (
-    <section id="comeback" aria-labelledby="comeback-title" ref={wrap} className="relative h-[300vh] bg-ink text-paper">
+    <section id="comeback" aria-labelledby="comeback-title" ref={wrap} className="relative h-[250vh] bg-ink text-paper">
       <h2 id="comeback-title" className="sr-only">The comeback</h2>
-      <div className="sticky top-0 flex h-[100svh] flex-col justify-start overflow-hidden px-5 pt-[18vh] md:px-10">
-        <canvas ref={canvas} aria-hidden className="absolute inset-x-0 bottom-[10%] h-[26vh] w-full" />
-        <div className="relative mx-auto w-full max-w-grid">
-          <div className="max-w-3xl">
-            {beats.map((b, i) => (
-              <div key={b.title} className={i === beat ? "block" : "hidden"} aria-hidden="true">
-                <p className="display text-[clamp(2.6rem,7vw,6.5rem)]" style={{ fontVariationSettings: `"wdth" ${i === 1 ? 62 : 110}` }}>
-                  {b.title}
-                </p>
-                <p className="serif mt-5 max-w-xl text-xl leading-relaxed text-paper/80">{b.body}</p>
-              </div>
-            ))}
-            {/* Screen readers get the whole story at once */}
-            <div className="sr-only">
-              {beats.map((b) => (
-                <p key={b.title}>{b.title} {b.body}</p>
+      {/* full story for screen readers, read once in order */}
+      <div className="sr-only">
+        {beats.map((b) => (
+          <p key={b.label}>
+            {b.title} {b.body}
+          </p>
+        ))}
+      </div>
+
+      <div aria-hidden className="sticky top-0 flex h-[100svh] flex-col overflow-hidden px-5 pb-8 pt-28 md:px-10">
+        <div className="mx-auto flex w-full max-w-grid flex-1 flex-col">
+          <div className="flex items-start justify-between gap-6">
+            {marker}
+            <ol className="flex gap-6 text-sm">
+              {beats.map((b, i) => (
+                <li key={b.label} className={`transition-colors duration-300 ${i === beat ? "text-lime" : i < beat ? "text-paper/70" : "text-paper/30"}`}>
+                  <span className="tabular mr-1.5">{i + 1}</span>
+                  {b.label}
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
+
+          <div className="mt-[8vh] min-h-[16rem] max-w-4xl">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={beat}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <p className="display text-[clamp(2.7rem,7vw,6.8rem)]" style={{ fontVariationSettings: `"wdth" ${beats[beat].wdth}` }}>
+                  {beats[beat].title}
+                </p>
+                <p className="serif mt-6 max-w-[32rem] text-[1.3rem] leading-[1.5] text-paper/80">{beats[beat].body}</p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <canvas ref={canvas} className="mt-auto h-[22vh] w-full" />
         </div>
-        <ol className="absolute bottom-8 left-5 flex gap-2 md:left-10" aria-hidden>
-          {beats.map((b, i) => (
-            <li key={b.title} className={`h-1 w-10 ${i <= beat ? "bg-lime" : "bg-paper/20"}`} />
-          ))}
-        </ol>
       </div>
     </section>
   );

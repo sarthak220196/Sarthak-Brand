@@ -5,7 +5,7 @@ import Hero from "@/components/Hero";
 import CareerEvolution from "@/components/CareerEvolution";
 import Network from "@/components/Network";
 import Comeback from "@/components/Comeback";
-import Decks from "@/components/Decks";
+import DjTeaser from "@/components/DjTeaser";
 import Builds from "@/components/Builds";
 import Explorer from "@/components/Explorer";
 import Human from "@/components/Human";
@@ -29,7 +29,7 @@ export default function Page() {
         <CareerEvolution />
         <Network />
         <Comeback />
-        <Decks />
+        <DjTeaser />
         <Builds />
         <Explorer />
         <Human />

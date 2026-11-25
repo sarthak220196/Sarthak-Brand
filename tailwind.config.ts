@@ -14,8 +14,8 @@ const config: Config = {
         mute: "#6B675D",
       },
       fontFamily: {
-        sans: ["Archivo", "Helvetica Neue", "Arial", "sans-serif"],
-        serif: ["Newsreader", "Georgia", "Times New Roman", "serif"],
+        sans: ["Archivo Variable", "Archivo", "Helvetica Neue", "Arial", "sans-serif"],
+        serif: ["Newsreader Variable", "Newsreader", "Georgia", "Times New Roman", "serif"],
       },
       maxWidth: { grid: "1440px" },
     },

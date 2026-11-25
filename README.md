@@ -1,58 +1,39 @@
 # Several Frequencies: the Sarthak Sighat site
 
-Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion, Lucide.
+Next.js 14, TypeScript, Tailwind CSS, Framer Motion, Lucide. Fonts are self-hosted (Archivo variable width, Newsreader), so nothing loads from Google.
 
-## Run it
+## Where to edit things
+
+| What | File |
+|---|---|
+| Email, LinkedIn, CV, booking link, DJ links, site address | `site.config.ts` |
+| Career, metrics, projects, travel, all other copy | `data/site.ts` |
+
+Any field left as `""` in `site.config.ts` is hidden. Nothing broken or fake is ever shown.
+
+On GitHub: open the file, click the pencil icon, edit, then click "Commit changes". Vercel updates the site in a minute or two.
+
+## Run locally (optional)
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
-npm run build && npm start
+npm run dev
 ```
 
-Deploy to Vercel as-is. Set `NEXT_PUBLIC_SITE_URL` to your domain for correct SEO metadata.
+## What's on the page
 
-## Update content
+- **Hello:** the tagline tunes in, with each line stretching from condensed to wide.
+- **Work:** five chapters, each with its own colour, getting darker as the work gets more complex. The verbs widen from Build to Connect. A sticky chapter rail lets you jump between them.
+- **Network:** a dot-matrix world map. "Play the journey" lights markets up company by company. Every market can be selected by mouse, keyboard or the list.
+- **Comeback:** a three-part scroll story (Pause, Rebuild, Play) over a waveform that flatlines and returns unevenly.
+- **DJ:** a teaser with a Bollywood/Hollywood fader. The full artist experience is planned as a separate site; link it in `site.config.ts` when it exists.
+- **Builds, Field notes, Say hi.**
 
-Everything lives in `data/site.ts`:
+## Keyboard
 
-- `stages`: the five career chapters, companies, dates, achievements. Replace the `role` text with exact job titles if you prefer.
-- `stages[...].ledger`: Unlimit's closed vs in-pipeline items. Move items from `pipeline` to `closed` only when signed.
-- `regions`: markets on the network map (only regions named in your history).
-- `dj`: history, setup, `mixesUrl`.
-- `projects`: side projects and links.
-- `places`: travel journal. Empty by design; add real entries with photos in `/public/photos`.
-- `links`: email, LinkedIn, CV. Any `null` link shows "coming soon" instead of a dead link.
+- Ctrl or ⌘ + K: quick menu
+- Arrow keys, Enter, Esc inside menus
+- Tab reaches every control, including the markets on the map
+- Type "drop" anywhere for the easter egg
 
-## Structure
-
-```
-app/            layout (SEO, fonts), page (section order), globals.css (tokens)
-components/     one file per section + Intro, FrequencyNav, CommandPalette, EasterEgg
-lib/audio.ts    Web Audio two-deck engine (all sounds synthesised, no samples)
-lib/events.ts   tiny event bus used by the command palette
-data/site.ts    all content
-```
-
-## Design system
-
-Colours: paper #F1EDE2, bone #E6E0D1, charcoal #2B2B2E, black #000, lime #C8F135, cobalt #1E3FD8, mute #6B675D.
-Type: Archivo (variable width 62–125, the "tuning" device) for display and UI; Newsreader for editorial body copy.
-Motion: one orchestrated moment per section, reduced-motion respected everywhere.
-
-## Interactions
-
-- Intro: a radio dial sweeps stations and locks on. Once per session; Esc or "Skip intro".
-- Nav: a frequency dial whose needle follows your scroll.
-- Ctrl/⌘ + K: command palette (sections, start the mix, copy email, LinkedIn).
-- Career: sticky illustration changes per chapter (Build, Grow, Lead, Sell, Connect).
-- Network: filter markets by company; Unlimit lights the whole map.
-- Comeback: scroll-driven waveform that flatlines and returns unevenly.
-- Decks: two playable decks, shared BPM, per-deck filter, crossfader, live spectrum.
-- Easter egg: type "drop" anywhere outside a text field.
-
-## Before launch
-
-- Add email, LinkedIn and CV in `data/site.ts`.
-- Add an OG image at `app/opengraph-image.png` (1200×630).
-- Add photos of yourself only where you want them; nothing is stock.
+See `CONTENT_AUDIT.md` for the date and metric checks.

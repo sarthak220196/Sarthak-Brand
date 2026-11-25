@@ -42,7 +42,7 @@ export default function EasterEgg() {
           <p className="display text-center text-[22vw] leading-none" style={{ fontVariationSettings: '"wdth" 125' }}>
             Drop.
             <span className="mt-4 block text-base font-semibold" style={{ fontVariationSettings: '"wdth" 100' }}>
-              You found the secret. The real one happens on the dance floor.
+              You found it. The real one happens on the dance floor.
             </span>
           </p>
         </motion.div>

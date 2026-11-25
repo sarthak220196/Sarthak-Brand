@@ -1,6 +1,7 @@
 /**
  * THE SINGLE SOURCE OF TRUTH FOR THE SITE.
- * Edit this file to update copy, career, projects, links and travel.
+ * Edit this file to update copy, career, projects and travel.
+ * Contact and social links live in /site.config.ts.
  *
  * Links set to null render as a quiet "coming soon" label instead of a dead link.
  * Only facts supplied by Sarthak are in here. Keep it that way.
@@ -13,12 +14,19 @@ export interface LedgerItem {
   status: Status;
 }
 
+export interface Figure {
+  /** Copied verbatim from the CV/brief. Never estimate. */
+  value: string;
+  label: string;
+}
+
 export interface Role {
   company: string;
   dates: string;
   /** Role or focus. Replace with exact job titles where you prefer them. */
   role: string;
   context?: string;
+  figures?: Figure[];
   points: string[];
   ledger?: LedgerItem[];
   note?: string;
@@ -41,7 +49,7 @@ export const person = {
   base: "Mumbai, India",
   now: "Strategic partnerships in cross-border payments at Unlimit",
   intro:
-    "Engineering graduate turned commercial operator. I've worked across product, go-to-market, enterprise sales and, now, global payments partnerships. I'm also a DJ, and I'm heading back to the decks.",
+    "Engineering graduate turned commercial operator. I've worked across product, go-to-market, enterprise sales and, now, strategic partnerships in global payments. Also a DJ.",
   taglines: ["I make money move.", "I make music move.", "I make things happen."],
   closing: [
     "Engineer by education.",
@@ -64,10 +72,10 @@ export const stages: Stage[] = [
         company: "Creative Awards & Rewards",
         dates: "2019–2021",
         role: "Product strategy, demand generation and sales",
+        figures: [{ value: "$300K+", label: "revenue from a B2B product, sold to hospitals and airlines" }],
         points: [
           "Helped develop and launch a B2B product.",
           "Owned product strategy, demand generation and sales execution.",
-          "The product generated more than $300K in revenue, sold to hospitals and airlines.",
         ],
       },
     ],
@@ -84,24 +92,20 @@ export const stages: Stage[] = [
         company: "Rocketium",
         dates: "Jan 2021 – Apr 2022",
         role: "Sales development and outbound",
-        points: [
-          "Built outbound motions for new regions.",
-          "Achieved 190%+ of quota.",
-          "Mentored junior SDRs.",
-          "Optimised sales playbooks.",
-        ],
+        figures: [{ value: "190%+", label: "of quota" }],
+        points: ["Built outbound motions for new regions.", "Mentored junior SDRs.", "Optimised sales playbooks."],
       },
       {
         company: "Toddle",
         dates: "Apr 2022 – Mar 2023",
         role: "Outbound GTM strategy",
         context: "APAC, North America, LATAM",
-        points: [
-          "Designed outbound GTM strategy across APAC, North America and LATAM.",
-          "Built $300K+ of outbound pipeline.",
-          "Achieved 145%+ of quota for two consecutive quarters.",
-          "Increased SQLs by 25%.",
+        figures: [
+          { value: "$300K+", label: "outbound pipeline built" },
+          { value: "145%+", label: "of quota, two consecutive quarters" },
+          { value: "+25%", label: "SQLs" },
         ],
+        points: ["Designed outbound GTM strategy across APAC, North America and LATAM."],
       },
     ],
   },
@@ -118,12 +122,12 @@ export const stages: Stage[] = [
         dates: "Mar 2023 – Apr 2024",
         role: "SDR Manager, inbound and outbound",
         context: "APAC, USA",
-        points: [
-          "Led and coached four SDRs.",
-          "Built the company's first structured outbound engine.",
-          "Generated $300K+ of qualified pipeline across APAC and the USA.",
-          "Improved lead-to-meeting conversion by 35%.",
+        figures: [
+          { value: "4", label: "SDRs led and coached" },
+          { value: "$300K+", label: "qualified pipeline, APAC and USA" },
+          { value: "+35%", label: "lead-to-meeting conversion" },
         ],
+        points: ["Built the company's first structured outbound engine."],
       },
     ],
   },
@@ -141,10 +145,12 @@ export const stages: Stage[] = [
         dates: "Apr 2024 – Sep 2025",
         role: "Full-cycle enterprise sales, fintech and payments",
         context: "SEA, EU, USA",
+        figures: [
+          { value: "$500K+", label: "qualified pipeline built and managed" },
+          { value: "90–104%", label: "of quarterly quota" },
+          { value: "$30K–$60K", label: "ARR per enterprise contract closed" },
+        ],
         points: [
-          "Built and managed $500K+ of qualified pipeline across SEA, the EU and the USA.",
-          "Achieved 90–104% of quarterly quota.",
-          "Closed enterprise contracts worth $30K–$60K ARR.",
           "Worked with global e-commerce and fintech merchants.",
           "Led discovery, demos, negotiation and onboarding.",
           "Worked with product and engineering on API and integration-led solutions.",
@@ -155,11 +161,8 @@ export const stages: Stage[] = [
         dates: "Sep 2025 – Feb 2026",
         role: "Global Account Executive",
         context: "Regulated, compliance-focused fintech, GIFT City",
-        points: [
-          "Closed and onboarded three customers end to end.",
-          "Generated additional outbound pipeline.",
-          "Progressed several opportunities to late-stage evaluation.",
-        ],
+        figures: [{ value: "3", label: "customers closed and onboarded end to end" }],
+        points: ["Generated additional outbound pipeline.", "Progressed several opportunities to late-stage evaluation."],
         note: "Moved on for surgery and recovery.",
       },
     ],
@@ -170,7 +173,7 @@ export const stages: Stage[] = [
     chapter: "The partnerships builder",
     years: "2026 – now",
     lesson: "Moving from selling to one buyer towards building networks of partners, merchants and markets.",
-    carriedForward: "Where it's all going",
+    carriedForward: "Partnerships and networks across global payments",
     roles: [
       {
         company: "Unlimit",
@@ -211,31 +214,47 @@ export interface Region {
   name: string;
   lon: number;
   lat: number;
-  companies: string[];
 }
 
-/** Regions named in the career history. lon/lat are approximate region centres for the map. */
+/** Regions named in the career history. lon/lat are approximate centres for the map. */
 export const regions: Region[] = [
-  { id: "na", name: "North America / USA", lon: -98, lat: 40, companies: ["Toddle", "Sprinto", "PortOne"] },
-  { id: "latam", name: "LATAM", lon: -60, lat: -14, companies: ["Toddle"] },
-  { id: "eu", name: "EU", lon: 10, lat: 50, companies: ["PortOne"] },
-  { id: "apac", name: "APAC", lon: 128, lat: 32, companies: ["Toddle", "Sprinto"] },
-  { id: "sea", name: "SEA", lon: 106, lat: 4, companies: ["PortOne"] },
-  { id: "gift", name: "GIFT City", lon: 72.6, lat: 23.2, companies: ["Glomo"] },
+  { id: "na", name: "North America", lon: -98, lat: 40 },
+  { id: "latam", name: "LATAM", lon: -60, lat: -12 },
+  { id: "eu", name: "EU", lon: 12, lat: 49 },
+  { id: "apac", name: "APAC", lon: 132, lat: 34 },
+  { id: "sea", name: "SEA", lon: 106, lat: 6 },
+  { id: "gift", name: "GIFT City", lon: 72.6, lat: 23.2 },
 ];
 
 export const home = { name: "Mumbai", lon: 72.88, lat: 19.07 };
+
+export interface Route {
+  company: string;
+  dates: string;
+  /** "global" = no specific markets named */
+  regions: string[] | "global";
+  /** What happened there, in words from the CV. */
+  summary: string;
+}
+
+/** In career order. Rocketium is omitted: its "new regions" were not named. */
+export const routes: Route[] = [
+  { company: "Toddle", dates: "Apr 2022 – Mar 2023", regions: ["apac", "na", "latam"], summary: "Outbound GTM strategy designed across APAC, North America and LATAM. $300K+ outbound pipeline." },
+  { company: "Sprinto", dates: "Mar 2023 – Apr 2024", regions: ["apac", "na"], summary: "$300K+ qualified pipeline across APAC and the USA." },
+  { company: "PortOne", dates: "Apr 2024 – Sep 2025", regions: ["sea", "eu", "na"], summary: "$500K+ qualified pipeline across SEA, the EU and the USA." },
+  { company: "Glomo", dates: "Sep 2025 – Feb 2026", regions: ["gift"], summary: "Global account executive in regulated, compliance-focused fintech, based out of GIFT City." },
+  { company: "Unlimit", dates: "Apr 2026 – present", regions: "global", summary: "Cross-border payments with a primarily global focus. Specific markets aren't listed here." },
+];
 
 export const dj = {
   history: [
     "Won DJ competitions in college.",
     "Played New Year's parties and other live events.",
     "Took a hiatus for work and life.",
-    "Coming back to it, seriously this time.",
+    "Now returning to it, seriously.",
   ],
   setup: ["Pioneer DDJ-FLX4", "FL Studio 2025"],
   focus: "Bollywood × Hollywood mashups",
-  mixesUrl: null as string | null,
 };
 
 export interface Project {
@@ -278,20 +297,12 @@ export interface Place {
 }
 export const places: Place[] = [];
 
-export const links = {
-  email: null as string | null, // e.g. "you@domain.com"
-  linkedin: null as string | null, // e.g. "https://www.linkedin.com/in/..."
-  cv: null as string | null, // e.g. "/sarthak-sighat-cv.pdf" placed in /public
-};
-
-export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
 export const stations = [
   { id: "top", label: "Hello", freq: "88.0" },
   { id: "work", label: "Work", freq: "92.4" },
   { id: "network", label: "Network", freq: "96.1" },
   { id: "comeback", label: "Comeback", freq: "99.9" },
-  { id: "decks", label: "Decks", freq: "101.7" },
+  { id: "dj", label: "DJ", freq: "101.7" },
   { id: "builds", label: "Builds", freq: "104.3" },
   { id: "explorer", label: "Explorer", freq: "106.5" },
   { id: "hello", label: "Say hi", freq: "108.0" },
